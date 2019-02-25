@@ -1,0 +1,26 @@
+{
+   "YLog":{
+	"debug": "yes",
+	"ylogout":[{
+	    "logtype": "file",
+	    "logfile": "/opt/postcode/log/debug.tdt",
+	    "errorfile": "/opt/postcode/log/error.tdt"
+	}]
+    },
+   "pidfile": "/var/run/postcode.pid",
+   "workdir": "/opt/postcode/",
+   "interface": "172.0.0.33",
+   "port": 5553,
+   "debug": "yes",
+   "https": "no",
+   "username": "user",
+   "password": "passwd",
+   "core": {
+        "database_type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "dbname": "postcode",
+        "username": "postCodeUser",
+        "password": "postCodePassword"
+   }
+}
