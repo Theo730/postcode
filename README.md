@@ -1,4 +1,13 @@
 # postcode
+[eng]
+Small programme for validating postal codes (data from the Russian post). Additionally, the program serves as a reference for:
+* Regions
+* Autonomous regions
+* Areas
+* City
+* Zip codes in the above
+
+[rus]
 Проект работы с "ЭТАЛОННЫЙ СПРАВОЧНИК ПОЧТОВЫХ ИНДЕКСОВ ОБЪЕКТОВ ПОЧТОВОЙ СВЯЗИ", файл справочника расположен по адресу https://vinfo.russianpost.ru/database/ops.html. На момент написания был взят файл PIndx03.dbf, который содержит:
 ```
 Unzip file PIndx.zip
@@ -11,7 +20,7 @@ Records added citys - 23302
 Records added indexes - 48791
 Time has passed: 2.57 min
 ```
-Для использования программы необходим Mysql сервер.
+Для использования программы необходим установленный Mysql сервер.
 Перед запуском сервера необходимо инициализировать базу данных и данные.
 ```
 ./postCode -config ./config.json -init PIndx.zip
