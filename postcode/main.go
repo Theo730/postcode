@@ -128,6 +128,7 @@ func InitAPI(){
 	router.GET("/api/v1/getAll/:name", BasicAuth(HGetAll, config.UserName, config.Password))
 	router.GET("/api/v1/getAllIndexesID/:name/:id", BasicAuth(HGetAllIndexes, config.UserName, config.Password))
 	router.GET("/api/v1/getAddressByPostIndex/:id", BasicAuth(HGetAddress, config.UserName, config.Password))
+	router.GET("/api/v1/getNamesByTopId/:name/:id", BasicAuth(HGetNamesByTopID, config.UserName, config.Password))
 	router.POST("/api/v1/getAddressByPostCodes", BasicAuth(HGetAddresses, config.UserName, config.Password))
 
     syscall.Dup2(int(ylog.F[3].Fd()), 1)

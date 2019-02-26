@@ -1,14 +1,7 @@
 package postcode
 
 import (
-//	"crypto/sha1"
-//	"crypto/tls"
-//	"database/sql"
-//	"errors"
-	"fmt"
-//	"math/rand"
-//	"net/http"
-//	"strconv"
+    "fmt"
     "time"
     ylog	"github.com/postcode/lib/ylog"
     yconfig	"github.com/postcode/lib/yconfig"
@@ -129,13 +122,19 @@ func GetStat() (rec Stat, err error){
     return rec, nil
 }
 
-func GetAllGist(tableName string) (out OutGist, err error){
-    str			:= fmt.Sprintf("SELECT ID, NAME, DESCRIPTION FROM %s", tableName)
+func GetGist(tableName string, id int) (out OutGist, err error){
+    var str string
+    if id ==0{
+	str			= fmt.Sprintf("SELECT ID, NAME, DESCRIPTION FROM %s", tableName)
+    }else{
+	str			= fmt.Sprintf("SELECT ID, NAME, DESCRIPTION FROM %s WHERE TOP_ID = %d", tableName, id)
+    }
     results, err 	:= Db.Query(str)
     if err != nil {
 	ylog.YLog(3, Ident, "DataBase Error "+err.Error())
 	return out, err
     }
+    j			:= 0
     for results.Next() {
 	var gist Gist
 
@@ -144,7 +143,9 @@ func GetAllGist(tableName string) (out OutGist, err error){
 	    panic(err.Error()) 
 	}
 	out.Gist		= append(out.Gist, gist)
+	j++
     }
+    out.Count			= j
     return out, nil
 }
 
@@ -164,6 +165,7 @@ func GetAllIndexes(tableName string, tLevel int, id string ) (out Indexes, err e
 	ylog.YLog(3, Ident, "DataBase Error "+err.Error())
 	return out, err
     }
+    j			:= 0
     for results.Next() {
 	var index string
 
@@ -172,7 +174,9 @@ func GetAllIndexes(tableName string, tLevel int, id string ) (out Indexes, err e
 	    panic(err.Error()) 
 	}
 	out.Indexes	= append(out.Indexes, index)
+	j++
     }
+    out.Count		= j
     return out, nil
 }
 
@@ -187,7 +191,6 @@ func GetAddress(id string) (out Address, err error){
     return out, nil
 }
 
-
 func GetAddresses(indexes Indexes) (out Addresses, err error){
     str 		:=  fmt.Sprintf("'%s'", indexes.Indexes[0])
     for i:=1; i<len(indexes.Indexes);i++ {
@@ -197,17 +200,18 @@ func GetAddresses(indexes Indexes) (out Addresses, err error){
 	"FROM indexes, citys, areas, autonoms, regions WHERE indexes.name in ( %s ) and indexes.top_id = citys.id and citys.top_id = areas.id "+
 	"and areas.top_id = autonoms.id and autonoms.top_id = regions.id", str)
     results, err 	:= Db.Query(str)
-    fmt.Printf("%v %v\n\n", str, indexes)
+    j			:=0
     for results.Next() {
 	var address Address
-    
 	err 		= results.Scan(&address.Index, &address.City, &address.City1, &address.Area, &address.Autonom, &address.Region)
 	if err != nil {
 	    ylog.YLog(3, Ident, "Stat select param error, Error: "+err.Error())
 	    return out, err
 	}
 	out.Address	= append(out.Address, address)
+	j++
     }
+    out.Count		= j
     return out, nil
 }
 

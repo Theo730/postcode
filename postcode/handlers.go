@@ -39,7 +39,7 @@ func HGetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	    w.WriteHeader(404)
 	    return
 	}
-	Out, err		:= GetAllGist(gist)
+	Out, err		:= GetGist(gist, 0)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			fmt.Println(err)
@@ -151,6 +151,36 @@ func HGetAddresses(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     }
 }
 
+func HGetNamesByTopID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var err error
+	gist			:= strings.ToLower(GetVal(w, ps, "name")) 
+	if isValueInTable(gist) < 0 {
+	    w.WriteHeader(404)
+	    return
+	}
+	id			:= GetVal(w, ps, "id")
+	k, err 			:= strconv.Atoi(id)
+	if  err != nil {
+	    w.WriteHeader(500)
+	    return
+	}
+	Out, err		:= GetGist(gist, k)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println(err)
+			w.WriteHeader(404)
+			return
+		}
+		w.WriteHeader(500)
+		fmt.Println(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err = json.NewEncoder(w).Encode(Out); err != nil {
+		fmt.Println(err)
+		w.WriteHeader(500)
+	}
+}
 
 func isValueInTable(value string) int {
     for k, v := range table {

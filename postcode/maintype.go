@@ -39,6 +39,7 @@ type Node struct{
 
 // OutGist - структура выдачи обектов
 type OutGist struct{
+    Count		int		`json:"count"`			// количество
     Gist		[]Gist		`json:"gist"`			// масив объектов выдачи
 }
 
@@ -50,7 +51,8 @@ type Gist struct{
 }
 
 type Indexes struct{
-    Indexes		[]string	`json:"indexes"`			// почтовый индекс
+    Count		int		`json:"count"`			// количество
+    Indexes		[]string	`json:"indexes"`		// почтовый индекс
 }
 
 type Address struct{
@@ -63,5 +65,6 @@ type Address struct{
 }
 
 type Addresses struct{
-    Address		[]Address		`json:"adress"`			// адреса
+    Count		int		`json:"count"`			// количество
+    Address		[]Address	`json:"adress"`		// адреса
 }
