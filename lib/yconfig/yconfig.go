@@ -5,6 +5,7 @@ import (
     "fmt"
 )
 
+// читает файл и правращает его в стректуру Config
 func Conf(config *Config, configPath *string) {
     if len(*configPath)<2{
 	*configPath = "/etc/postcode/" + os.Args[0]

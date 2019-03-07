@@ -18,12 +18,14 @@ func Params(cfg yconfig.DBParams, str string) string {
 	    info		= fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", cfg.UserName, cfg.Password, cfg.Host, cfg.Port, cfg.DbName)
 	}
     }
+// для oracle 12, возможно будет использоваться
     if str == "oci8" {
 	info			= fmt.Sprintf("%s:%s@%s/%s", cfg.UserName, cfg.Password, cfg.Host, cfg.Sid)
     }
     return info
 }
 
+// Добавление всех регионов в базу данных
 func AddRegions(Nodes [level]Node)(int, error){
     var  i int
     stmt, err 			:= Db.Prepare("INSERT INTO regions SET NAME = ?")
@@ -46,6 +48,7 @@ func AddRegions(Nodes [level]Node)(int, error){
     return i, nil
 }
 
+// Добавление всех сущностей, кроме регионов, в базу данных
 func AddAll(Nodes [level]Node)(int, error){
     var j int64 
     var str string
@@ -122,9 +125,10 @@ func GetStat() (rec Stat, err error){
     return rec, nil
 }
 
-func GetGist(tableName string, id int) (out OutGist, err error){
+// GetGist - запрос всех сущностей в базе данных, входящие параметры tableName - имя сущности, id - если надо, id родителя
+func GetGist(tableName string, id int = 0) (out OutGist, err error){
     var str string
-    if id ==0{
+    if id == 0{
 	str			= fmt.Sprintf("SELECT ID, NAME, DESCRIPTION FROM %s", tableName)
     }else{
 	str			= fmt.Sprintf("SELECT ID, NAME, DESCRIPTION FROM %s WHERE TOP_ID = %d", tableName, id)
@@ -180,6 +184,7 @@ func GetAllIndexes(tableName string, tLevel int, id string ) (out Indexes, err e
     return out, nil
 }
 
+// GetAddress - получание адреса по почтовому индексу
 func GetAddress(id string) (out Address, err error){
     err		= Db.QueryRow("SELECT indexes.name, citys.name, citys.description, areas.name, autonoms.name, regions.name "+ 
 	"FROM indexes, citys, areas, autonoms, regions WHERE indexes.name = ? and indexes.top_id = citys.id and citys.top_id = areas.id "+
@@ -191,6 +196,7 @@ func GetAddress(id string) (out Address, err error){
     return out, nil
 }
 
+// GetAddresses - получение всех адресов по массиву почтовых индексов
 func GetAddresses(indexes Indexes) (out Addresses, err error){
     str 		:=  fmt.Sprintf("'%s'", indexes.Indexes[0])
     for i:=1; i<len(indexes.Indexes);i++ {
@@ -214,4 +220,3 @@ func GetAddresses(indexes Indexes) (out Addresses, err error){
     out.Count		= j
     return out, nil
 }
-

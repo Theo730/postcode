@@ -3,7 +3,8 @@ package yconfig
 import (
     ylog	"github.com/postcode/lib/ylog"
 )
-// структуры для конфиг файла
+
+// структура для конфиг файла
 type Config struct {
     YLog		ylog.YLogType	`json:"YLog"`
     Pidfile		string		`json:"pidfile"`
@@ -17,6 +18,7 @@ type Config struct {
     Core		DBParams	`json:"core"`
 }
 
+// структыра параментров базы данных
 type DBParams struct{
     DatabaseType	string		`json:"database_type"`
     Host		string		`json:"host"`
